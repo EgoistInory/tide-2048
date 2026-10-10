@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>潮汐 2048 浏览器验收场景</title>
+<style>body{margin:0;font:14px sans-serif}nav{height:42px;display:flex;align-items:center;gap:15px;padding:0 16px}iframe{width:100%;height:calc(100vh - 46px);border:0}</style>
+<nav><label for="scenario">验收场景</label><select id="scenario"><option value="win">即将合成 2048</option><option value="over">无路可走</option><option value="corrupt">损坏存档</option><option value="blocked">存储被禁用</option></select><span>测试使用隔离内存存档，不影响真实游戏。</span></nav><iframe title="游戏测试场景"></iframe>
+<script>
+const fixtures = {
+  win: {state:{board:[1024,1024,0,0,0,0,0,0,0,0,0,0,0,0,0,0],score:0,continued:false},previous:null,best:0,sound:false},
+  over: {state:{board:[2,4,2,4,4,2,4,2,2,4,2,4,4,2,4,2],score:128,continued:false},previous:null,best:256,sound:false}
+};
+async function loadScenario() {
+  const kind = document.querySelector('select').value;
+  const response = await fetch('../index.html?qa=' + Date.now(), {cache:'no-store'});
+  if (!response.ok) throw new Error('Cannot load game template');
+  const source = await response.text();
+  const value = kind === 'corrupt' ? 'broken-json' : JSON.stringify(fixtures[kind] || fixtures.win);
+  // The mock lives only inside this iframe and tests the real production scripts.
+  const mock = `let value = ${JSON.stringify(value)};Object.defineProperty(window,'localStorage',{value:{getItem(){${kind === 'blocked' ? 'throw new Error("blocked")' : 'return value'}},setItem(k,v){${kind === 'blocked' ? 'throw new Error("blocked")' : 'value=v'}}}});`;
+  document.querySelector('iframe').srcdoc = source.replace('<head>', '<head><base href="../"><script>' + mock + '<\/script>');
+}
+document.querySelector('select').addEventListener('change',loadScenario);
+loadScenario();
+</script></html>

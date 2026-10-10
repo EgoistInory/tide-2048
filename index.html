@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2e9">
+  <meta name="description" content="潮汐 2048，一款安静的海岸数字合成游戏。用方向键或滑动，让相同的数字相遇。">
+  <title>潮汐 2048 · 不赶时间，慢慢来</title>
+  <link rel="icon" href="assets/wave.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=1.1">
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./" aria-label="潮汐首页"><img src="assets/wave.svg" alt="" width="58" height="32"><span>潮汐</span></a>
+    <button id="help" class="button small">玩法</button>
+  </header>
+  <main class="layout">
+    <section class="intro" aria-labelledby="title">
+      <div class="intro-copy">
+        <h1 id="title">潮汐 <em>2048</em></h1>
+        <p class="tagline">把喧嚣留在岸上。<br>滑动、相遇，合成你的 2048。</p>
+      </div>
+      <figure class="coast"><img src="assets/coast.png" alt="青绿色海水轻拂沙滩，一艘橙色帆船停在海湾" width="1536" height="1024"><figcaption>一次滑动，一点心流。</figcaption></figure>
+    </section>
+    <section class="game" aria-label="2048 游戏">
+      <div class="scores">
+        <div class="score"><span>当前得分</span><strong id="score">0</strong><span id="gain" aria-hidden="true"></span></div>
+        <div class="score"><span>最高纪录</span><strong id="best">0</strong></div>
+      </div>
+      <div class="board" id="board" tabindex="0" role="group" aria-label="4 行 4 列棋盘，使用方向键或 WASD 移动，手机可滑动">
+        <div class="board-inner"><div class="cells" aria-hidden="true"></div><div id="tiles" aria-hidden="true"></div><div class="sr-only" id="board-description"></div></div>
+        <div id="end-screen" class="end-screen" hidden>
+          <div><p class="end-number" id="end-number">2048</p><h2 id="end-title">潮水相逢</h2><p id="end-copy"></p><button id="continue" class="button primary">继续远航</button><button id="end-undo" class="button">撤销一步</button><button id="end-new" class="button">再来一局</button></div>
+        </div>
+      </div>
+      <div class="actions"><button id="undo" class="button" disabled>撤销一步</button><button id="new" class="button primary">新的一局</button><button id="sound" class="button" aria-pressed="false" aria-label="音效：关闭">音效 <span class="sound-indicator" aria-hidden="true"></span></button></div>
+      <p class="controls">方向键 / WASD <span>·</span> 手机滑动</p>
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer><span>不赶时间，慢慢来。</span><a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener noreferrer">灵感来自 2048</a></footer>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <h2 id="help-title">让相同的数字相遇。</h2>
+    <p>用方向键、WASD，或在棋盘上滑动，移动所有方块。两个相同的数字碰到一起，就会合成它们的和。</p>
+    <div class="merge-example" aria-label="2 加 2 合成 4"><span>2</span><b>+</b><span>2</span><b>=</b><span>4</span></div>
+    <p>每次有效移动后，会出现一个 2 或 4。合成 <strong>2048</strong> 即可获胜，还能继续挑战更大的数字。棋盘填满且无法合并时，本局结束。</p>
+    <p class="dialog-note">撤销可退回最近一次有效移动；进度与最高分自动保存在当前浏览器。没有倒计时，慢慢来。</p>
+    <form method="dialog"><button class="button primary">开始感受潮汐</button></form>
+  </dialog>
+  <dialog id="restart-dialog" aria-labelledby="restart-title"><h2 id="restart-title">迎接新一轮潮汐？</h2><p>本局进度将重新开始，最高纪录会保留。</p><div class="dialog-actions"><button class="button" id="cancel-new">继续本局</button><button class="button primary" id="confirm-new">开始新局</button></div></dialog>
+  <noscript><p>请开启浏览器 JavaScript 后游玩。</p></noscript>
+</body>
+</html>
